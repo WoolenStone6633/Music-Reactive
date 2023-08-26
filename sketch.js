@@ -1,4 +1,5 @@
 var dropzone;
+var sentence;
 var button;
 var jumpButton;
 var slider;
@@ -39,8 +40,47 @@ var speed7;
 var speed8;
 var speed9;
 
+var cnv;
+var jumpXModifier;
+var preLoadeddXModifier;
+var preLoadedd2XModifier;
+var ranButtonXModifier;
+var sliderXModifier;
+var buttonSliderWidth;
+var canvasHeightModifier = 150;
+
+function centerCanvas() {
+  var x = (windowWidth - width) / 2;
+  var y = (windowHeight - height - canvasHeightModifier) / 2;
+  cnv.position(x, y);
+}
+
+function centerAdditions() {
+  dropzone.position((windowWidth - width)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+  sentence.position((windowWidth - width)/ 2, (windowHeight - height * 2 + canvasHeightModifier + 16)/ 2);
+  resizeAdditions();
+}
+
+function resizeAdditions() {
+  buttonSliderWidth = button.width + jumpButton.width + preLoadedd.width + preLoadedd2.width + ranButton.width + slider.width;
+  jumpXModifier = button.width * 2;
+  preLoadeddXModifier = jumpXModifier + jumpButton.width * 2;
+  preLoadedd2XModifier = preLoadeddXModifier + preLoadedd.width * 2;
+  ranButtonXModifier = preLoadedd2XModifier + preLoadedd2.width * 2;
+  sliderXModifier = ranButtonXModifier + ranButton.width * 2;
+
+  button.position((windowWidth - buttonSliderWidth)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+  jumpButton.position((windowWidth - buttonSliderWidth + jumpXModifier)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+  preLoadedd.position((windowWidth - buttonSliderWidth + preLoadeddXModifier)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+  preLoadedd2.position((windowWidth - buttonSliderWidth + preLoadedd2XModifier)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+  ranButton.position((windowWidth - buttonSliderWidth + ranButtonXModifier)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+  slider.position((windowWidth - buttonSliderWidth + sliderXModifier)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
+}
+
 function setup() {
-  createCanvas(400, 400);
+  cnv = createCanvas(400, 400);
+  centerCanvas();
+  background(255, 0, 200);
   angleMode(DEGREES);
 
   bands = 32
@@ -70,11 +110,14 @@ function setup() {
   speed8 = 4;
   speed9 = 3;
 
+  sentence = select('#paragraph');
+  sentence.position((windowWidth - width)/ 2, (windowHeight - height * 2 + canvasHeightModifier + 16)/ 2);
+
   dropzone = select('#dropzone');
   dropzone.dragOver(highlight);
   dropzone.dragLeave(unHighlight);
   dropzone.drop(gotFile, unHighlight);
-  dropzone.position(0, 460);
+  dropzone.position((windowWidth - width)/ 2, (windowHeight + height - canvasHeightModifier)/ 2);
 
   button = createButton("Play");
   jumpButton = createButton("Jump");
@@ -86,6 +129,8 @@ function setup() {
   ranButton.mousePressed(randomNumArray1);
   slider = createSlider(0, 1, loudness, 0.01);
 
+  resizeAdditions();
+
   fft = new p5.FFT(smoothing, bands);
   vol = new p5.Amplitude();
   fftPeak = new p5.FFT();
@@ -94,6 +139,11 @@ function setup() {
   visual = new Visualizer(bands, smoothing, loudness, fft, vol, start, end);
 
   randomNumArray(start, end, bands, ranArray);
+}
+
+function windowResized() {
+  centerCanvas();
+  centerAdditions();
 }
 
 function draw() {
@@ -254,12 +304,6 @@ function draw() {
   }
 }
 
-
-
-
-
-
-
 function gotFile(file) {
   if (song != null) {
     song.stop();
@@ -330,11 +374,14 @@ function togglePlaying() {
   if (!song.isPlaying()) {
     song.play();
     song.setVolume(loudness);
-    button.html("pause");
+    button.html("Pause");
+    button.width = 54;
   } else {
     song.pause();
-    button.html("play");
+    button.html("Play");
+    button.width = 42;
   }
+  resizeAdditions();
 }
 
 function loaded() {
