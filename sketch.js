@@ -310,7 +310,7 @@ function preLoaded() {
     song.stop();
   }
   loading = true;
-  song = loadSound("Vicetone ft. D Brown - What I've Waited For (online-audio-converter.com).mp3", loaded);
+  song = loadSound("Music/Vicetone ft. D Brown - What I've Waited For (online-audio-converter.com).mp3", loaded);
 }
 
 function preLoaded2() {
@@ -318,7 +318,7 @@ function preLoaded2() {
     song.stop();
   }
   loading = true;
-  song = loadSound("RIOT - Overkill [Monstercat Release] (online-audio-converter.com).mp3", loaded);
+  song = loadSound("Music/RIOT - Overkill [Monstercat Release] (online-audio-converter.com).mp3", loaded);
 }
 
 function jumpPoint() {
